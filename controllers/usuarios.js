@@ -1,8 +1,8 @@
 const { response } = require("express");
 
-const usuariosGet = (req = request, res = response) => {
-  // const query = req.query;
+const Usuario = require("../models/usuario");
 
+const usuariosGet = (req = request, res = response) => {
   const { q, nombre = "No definido", apiKey } = req.query;
 
   res.json({
@@ -22,14 +22,14 @@ const usuariosPut = (req, res) => {
   });
 };
 
-const usuariosPost = (req, res) => {
+const usuariosPost = async (req, res) => {
   //vamos a destructurar el body
-  const { nombre, edad } = req.body; //vamos a limpiar esto de cualquier petición maliciosa
-
+  const body = req.body; //vamos a limpiar esto de cualquier petición maliciosa
+  const usuario = new Usuario(body);
+  await usuario.save()
   res.json({
     msg: "post API - controller",
-    nombre,
-    edad,
+    usuario,
   });
 };
 
