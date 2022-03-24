@@ -35,7 +35,6 @@ const login = async (req, res = response) => {
       usuario,
       token,
     });
-
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -46,16 +45,42 @@ const login = async (req, res = response) => {
 
 const googleSignIn = async (req, res = response) => {
   const { id_token } = req.body;
-
   try {
-    const googleUser = await googleVerify(id_token);
-    console.log(googleUser)
+    const { nombre, correo, img } = await googleVerify(id_token);
+    let usuario = await Usuario.findOne({ correo });
+    if (!usuario) {
+      const data = {
+        nombre,
+        correo,
+        password: ":P",
+        img,
+        google: true,
+      };
+
+      usuario = new Usuario(data);
+      await usuario.save();
+    }
+
+    //si el usuario en BD tiene su estado en false
+    if (!usuario.estado) {
+      return res.status(401).json({
+        msg: "Hable con el admin - usuario bloqueado",
+      });
+    }
+
+    const token = await generarJWT(usuario.id);
     // console.log(id_token);
     res.json({
-      msg: "Todo bien con la autenticación de Google",
-      id_token,
+      usuario,
+      token,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      msg: "El token del usuario no es válido",
+      error,
+    });
+  }
 };
 
 module.exports = {
