@@ -4,10 +4,10 @@ const { Producto } = require("../models");
 
 const crearProducto = async (req, res = response) => {
   const { estado, usuario, ...body } = req.body;
-  const productoDB = await Producto.findOne({ nombre: body.nombre });
-
+  const productoDB = await Producto.findOne({ nombre: body.nombre.toUpperCase() });
+  
   if (productoDB) {
-    return res.status(201).json({
+    return res.status(400).json({
       msg: `El producto ${productoDB.nombre}, ya existe`,
     });
   }
@@ -20,7 +20,7 @@ const crearProducto = async (req, res = response) => {
   };
 
   console.log(data);
-  const producto = await new Producto(data);
+  const producto = new Producto(data);
   //guardar en DB
   await producto.save();
 

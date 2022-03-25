@@ -18,10 +18,10 @@ const {
 
 const router = Router();
 
-//Obtener una categoria
+//Obtener una producto
 router.get("/", obtenerProductos);
 
-//obtener una categoria por id
+//obtener una producto por id
 router.get(
   "/:id",
   [
@@ -32,6 +32,7 @@ router.get(
   obtenerProducto
 );
 
+//Crear un producto con un token válido
 router.post(
   "/",
   [

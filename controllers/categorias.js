@@ -18,11 +18,11 @@ const crearCategoria = async (req, res = response) => {
   };
 
   console.log(data);
-  const categoria = await new Categoria(data);
+  const categoria = new Categoria(data);
   //guardar en DB
   await categoria.save();
 
-  res.status.json(categoria);
+  res.status(201).json(categoria);
 };
 
 //paginado, total y opcional, populate
