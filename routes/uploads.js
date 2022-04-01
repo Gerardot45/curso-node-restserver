@@ -5,6 +5,7 @@ const {
   cargarArchivos,
   actualizarImagen,
   mostrarImagen,
+  actualizarImagenCloudinary,
 } = require("../controllers/uploads");
 const { coleccionesPermitidas } = require("../helpers/db-validators");
 const { validarCampos, validarArchivoSubir } = require("../middlewares");
@@ -14,14 +15,15 @@ router.put("/", [validarArchivoSubir], cargarArchivos);
 router.put(
   "/:collection/:id",
   [
-    validarArchivoSubir,
+    //validarArchivoSubir,
     check("id", "El Id debe ser uno válido").isMongoId(),
     check("collection").custom((c) =>
       coleccionesPermitidas(c, ["usuarios", "productos"])
     ),
     validarCampos,
   ],
-  actualizarImagen
+  // actualizarImagen
+  actualizarImagenCloudinary
 );
 router.get(
   "/:collection/:id",
